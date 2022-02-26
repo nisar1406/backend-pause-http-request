@@ -3,6 +3,7 @@ import { v4 as uuid } from "uuid";
 import { promisify } from "util";
 import Busboy from "busboy";
 import path from "path/posix";
+import { Request, Response } from "express";
 
 let instance: null | FileUploadController = null;
 
@@ -21,7 +22,7 @@ class FileUploadController {
     return `./documents/file-${fileId}-${fileName}`;
   }
 
-  async uploadRequest(req: any, res: any) {
+  async uploadRequest(req: Request, res: Response) {
     if (!req.body || !req.body.fileName) {
       res.status(400).json({ message: 'Missing "fileName"' });
     } else {
@@ -38,7 +39,7 @@ class FileUploadController {
     }
   }
 
-  async uploadFile(req: any, res: any) {
+  async uploadFile(req: Request, res: Response) {
     const contentRange = req.headers["content-range"];
     const fileId = req.headers["x-file-id"];
 
@@ -79,7 +80,7 @@ class FileUploadController {
 
     const busboy = Busboy({ headers: req.headers });
 
-    busboy.on("file", (_, file: any, fileName: any) => {
+    busboy.on("file", (_, file:any, fileName: any) => {
       console.log(fileName, fileId);
       const filePath = path.join(
         path.join(
@@ -134,7 +135,7 @@ class FileUploadController {
     req.pipe(busboy);
   }
 
-  async getUploadingFileDetails(req: any, res: any) {
+  async getUploadingFileDetails(req: Request, res: Response) {
     if (req.query && req.query.fileName && req.query.fileId) {
       const filePath = path.join(
         path.join(
