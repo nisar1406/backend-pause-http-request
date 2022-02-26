@@ -6,11 +6,10 @@ import fileRoutes from "./routes/file";
 
 const app = express();
 
-const corsOptions = {
-  origin: "*",
-};
 
-app.use(cors(corsOptions));
+const whitelist = ['http://localhost:3000', 'https://pause-http-request.vercel.app/'];
+
+app.use(cors({origin: whitelist}));
 app.use(bodyParser.urlencoded({ extended: false }))
 
 // parse application/json
